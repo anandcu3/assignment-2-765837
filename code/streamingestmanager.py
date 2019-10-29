@@ -1,4 +1,3 @@
-from clientstreamingestapp import SubscribeThread
 import pika
 import json
 import time
@@ -21,10 +20,10 @@ class PublishAvaialbleTopics(threading.Thread):
                 channel.queue_declare(queue='topicnames_'+item)
                 channel.basic_publish(exchange='topicnames_'+item, routing_key='hello', body=json.dumps(available_topics[item]))
             connection.close()
-            time.sleep(2)
+            time.sleep(20)
 
 for a in available_topics.keys():
-    a = subprocess.call()
-    p = SubscribeThread(a+"_"+str(len(available_topics[a])))
-    available_topics[a].append(a+"_"+str(len(available_topics[a])))
+    topic_name = a+"_"+str(len(available_topics[a]))
+    a = subprocess.Popen(['python', 'clientstreamingestapp.py', topic_name])
+    available_topics[a].append(topic_name)
     jobs[a].append(p)
