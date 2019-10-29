@@ -28,9 +28,11 @@ if args.ingest_mode == "batch":
     elif args.client_id == "2":
         filename = args.file_to_upload_path.split("/")[-1].split(".")[0] + ".json"
         filepath = "client-input-directory/client"+ args.client_id +"_" + filename
+        print(filename)
         localpath = "../data/" + filename
+        print(localpath)
         arr = []
-        with open(localpath,  encoding='utf-8') as csvfile:
+        with open(args.file_to_upload_path,  encoding='utf-8') as csvfile:
             csvReader = csv.DictReader(csvfile)
             for rows in csvReader:
                 arr.append(rows)

@@ -1,8 +1,8 @@
 customer1:
   filetype : csv
-  filesize : 500  #in bytes
+  filesize : 1000000  #in bytes
 
 
 customer2:
   filetype : json
-  filesize : 1000  #in bytes
+  filesize : 2000000  #in bytes
