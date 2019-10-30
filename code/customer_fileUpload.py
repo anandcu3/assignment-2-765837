@@ -7,7 +7,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--client_id', type=str, help='Set the client ID.')
     parser.add_argument('--ingest_mode', type=str, default='batch', help='Set the ingestion mode as "batch" or "nearrealtime".')
-    parser.add_argument('--server_address', type=str, default='35.236.51.168')
+    parser.add_argument('--server_address', type=str, default='34.94.61.75')
     parser.add_argument('--file_to_upload_path', type=str, help='Set the path of the dataset to ingest including ".csv".')
     return parser.parse_args()
 args = parse_args()

@@ -3,11 +3,13 @@ import json
 import time
 import subprocess
 import threading
+import os
+import signal
 
 available_topics = {"customer1":[],"customer2":[]}
 jobs = {"customer1":[],"customer2":[]}
 credentials = pika.PlainCredentials('user','zfknBQbCRZ7u')
-parameters = pika.ConnectionParameters('35.236.51.168','5672','/',credentials)
+parameters = pika.ConnectionParameters('34.94.61.75','5672','/',credentials)
 
 class PublishAvaialbleTopics(threading.Thread):
     def __init__(self):
@@ -27,13 +29,21 @@ class ReceiveReports(threading.Thread):
         super(ReceiveReports, self).__init__()
     def run(self):
         def callback(ch, method, properties, body):
+            global jobs, available_topics
             report = json.loads(body.decode())
-            if report["ingestion_time"] > 200:
+            if report["total_time"] > 10:
                 topic_name = topic+"_"+str(len(available_topics[topic]))
                 print("Starting new topic for", report["clientID"])
                 a = subprocess.Popen(['python', 'clientstreamingestapp.py', topic_name])
                 available_topics[topic].append(topic_name)
                 jobs[topic].append(a)
+            if report["total_time"] < 10 and len(available_topics[report["clientID"]]) > 1:
+                for i in range(jobs):
+                    if i==0:
+                        continue
+                    os.killpg(os.getpgid(jobs[i].pid), signal.SIGTERM)
+                jobs = [jobs[0]]
+                available_topics = [available_topics[0]]
         connection = pika.BlockingConnection(parameters)
         channel = connection.channel()
         channel.queue_declare(queue='reporting_channel')
