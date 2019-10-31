@@ -32,11 +32,12 @@ class ReceiveReports(threading.Thread):
             global jobs, available_topics
             report = json.loads(body.decode())
             if report["total_time"] > 10:
-                topic_name = topic+"_"+str(len(available_topics[topic]))
+                clientName = report["clientID"]
+                topic_name = clientName+"_"+str(len(available_topics[clientName]))
                 print("Starting new topic for", report["clientID"])
                 a = subprocess.Popen(['python', 'clientstreamingestapp.py', topic_name])
-                available_topics[topic].append(topic_name)
-                jobs[topic].append(a)
+                available_topics[clientName].append(topic_name)
+                jobs[clientName].append(a)
             if report["total_time"] < 10 and len(available_topics[report["clientID"]]) > 1:
                 for i in range(jobs):
                     if i==0:
